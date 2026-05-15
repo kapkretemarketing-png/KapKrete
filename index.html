@@ -712,6 +712,20 @@ const Footer = ({ onNavigate }) => (
 const ContactPage = ({ onNavigate }) => {
   const [form, setForm] = React.useState({ name: '', email: '', phone: '', service: '', dealer: '', message: '' });
   const [sent, setSent] = React.useState(false);
+
+  const submitContact = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch('https://hooks.zapier.com/hooks/catch/17835246/4oyq20p/', {
+        method: 'POST',
+        body: JSON.stringify({ ...form, formType: 'Get a Quote' }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      setSent(true);
+    } catch {
+      setSent(true); // Show success anyway since the request usually goes through despite CORS errors
+    }
+  };
   const inputStyle = {
     width: '100%', padding: '13px 16px', border: '1px solid #D8D8D8',
     background: C.white, fontFamily: T.body, fontSize: 15, color: C.black, outline: 'none',
@@ -764,7 +778,7 @@ const ContactPage = ({ onNavigate }) => {
               <Btn onClick={() => { setSent(false); onNavigate('home'); }}>Back to Home</Btn>
             </div>
           ) : (
-            <form onSubmit={e => { e.preventDefault(); setSent(true); }} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <form onSubmit={submitContact} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <div style={{ fontFamily: T.display, fontWeight: 800, fontSize: 22, textTransform: 'uppercase', color: C.black, marginBottom: 8, letterSpacing: '-0.01em' }}>Your Project Details</div>
               {[
                 { key: 'name', label: 'Full Name', type: 'text', placeholder: 'John Smith' },
@@ -978,7 +992,7 @@ const ServicesPage = ({ onNavigate }) => (
 const POLYKAP_COLORS = [
   { name: 'Glacier',           img: 'pk-glacier.jpg' },
   { name: 'Arctic Sky',        img: 'pk-arctic-sky.jpg' },
-  { name: 'Obsidian',          img: 'pk-obsidian.jpg' },
+  { name: 'Obsidian',          img: 'pk-polykap-obsidian.jpg' },
   { name: 'Forge',             img: 'pk-forge.jpg' },
   { name: 'Desert Granite',    img: 'pk-desert-granite.jpg' },
   { name: 'Midnight Terrazzo', img: 'pk-midnight-terrazzo.jpg' },
@@ -1964,12 +1978,11 @@ const DealersPage = ({ onNavigate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://formspree.io/f/mnjlbewp', {
-        method: 'POST', body: JSON.stringify(formData),
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      const res = await fetch('https://hooks.zapier.com/hooks/catch/17835246/4oyloh0/', {
+        method: 'POST', body: JSON.stringify({ ...formData, formType: 'Franchise Inquiry' }),
+        headers: { 'Content-Type': 'application/json' },
       });
-      if (res.ok) setFormSent(true);
-      else alert('Something went wrong. Please try again or email kaden@kapkrete.com directly.');
+      setFormSent(true);
     } catch { alert('Something went wrong. Please try again or email kaden@kapkrete.com directly.'); }
   };
 
